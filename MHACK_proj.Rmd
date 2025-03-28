@@ -1,0 +1,100 @@
+---
+title: "MHACK_project"
+output: pdf_document
+date: "2025-03-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+library(survival)
+library(readr)
+library(splines)
+library(ggplot2)
+library(tidyr)
+```
+
+```{r}
+df = read_csv("C:\\Users\\Dennis\\Documents\\Biostat_MHACK_project\\cross-verified-database.csv.gz",
+              locale=readr::locale(encoding="latin1"), n_max = 500000)
+## Keeping birth, death, gender, Un_region
+```
+
+
+```{r}
+##Filter columns accordingly
+## my event is death. Data is right censored since some people did not pass away on or before 2022
+
+df = df[, c("birth", "death", "gender", "un_region")]
+
+df = df %>% mutate(lifespan = death - birth) %>% select(-death)
+```
+
+```{r}
+censor_year = 2022
+
+df = df %>% mutate(c_lifespan = ifelse(is.na(lifespan), censor_year - birth, lifespan))
+df
+
+## Need current time to be a variable as well 
+```
+
+## EDA
+
+```{r}
+count_countries = df %>% count(un_region)
+
+count_gender = df %>% count(gender)
+
+print(c(count_countries, count_gender))
+```
+# Some NAs are present
+# There are too little instances of other gender type to use in this study
+
+```{r}
+df = df %>% drop_na(-lifespan)
+
+df = df %>% filter(gender %in% c("Male", "Female"))
+
+dx = df %>% filter(birth >= 1500)
+
+# create a century variable 
+# 0 will indicate 16th century, 1 will indicate 17th century and so on
+
+dx = dx %>% mutate(century = floor((birth - 1500) / 100))
+
+#2 final variables to create is timespan (birth year - censored year) and event death)
+
+dx = dx %>% mutate(died = !is.na(lifespan))  %>% mutate(timespan = birth - 1500)
+```
+
+```{r}
+dx
+
+```
+
+
+## Potential Methods. Baseline hazard functions, Stratification, Survival regression analyses, Marginal hazard estimation, Estimates of marginal survival functions
+
+
+## Marginal survival function estimates
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
