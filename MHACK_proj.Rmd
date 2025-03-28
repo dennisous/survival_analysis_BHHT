@@ -19,7 +19,7 @@ library(tidyr)
 ```
 
 ```{r}
-df = read_csv("C:\\Users\\Dennis\\Documents\\Biostat_MHACK_project\\cross-verified-database.csv.gz",
+df = read_csv("C:\\Users\\Dennis\\Documents\\survival_analysis_BHHT\\cross-verified-database.csv.gz",
               locale=readr::locale(encoding="latin1"), n_max = 500000)
 ## Keeping birth, death, gender, Un_region
 ```
